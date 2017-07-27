@@ -1,0 +1,13 @@
+[package]
+authors = ["Jorge Aparicio <jorge@japaric.io>"]
+categories = ["concurrency", "embedded", "no-std"]
+description = "Core abstractions of the Real Time For the Masses framework"
+documentation = "https://docs.rs/rtfm-core"
+keywords = []
+license = "MIT OR Apache-2.0"
+name = "rtfm-core"
+repository = "https://github.com/japaric/rtfm-core"
+version = "0.1.0"
+
+[dependencies]
+static-ref = "0.2.1"
