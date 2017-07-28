@@ -21,7 +21,7 @@ pub use static_ref::Static;
 /// A resource, a mechanism to share data between tasks
 pub unsafe trait Resource {
     /// The data protected by the resource
-    type Data;
+    type Data: Send;
 
     /// Borrows the resource data for the duration of a critical section
     ///
@@ -50,7 +50,10 @@ pub unsafe trait Resource {
         F: FnOnce(&mut Static<Self::Data>, &mut Threshold) -> R;
 }
 
-unsafe impl<T> Resource for Static<T> {
+unsafe impl<T> Resource for Static<T>
+where
+    T: Send,
+{
     type Data = T;
 
     fn borrow<'cs>(&'cs self, _cs: &'cs Threshold) -> &'cs Static<T> {
