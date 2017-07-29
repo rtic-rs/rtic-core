@@ -3,7 +3,7 @@
 
 # `rtfm-core`
 
-> Core abstractions of the Real Time For the Masses
+> Core abstractions of the Real Time For the Masses (RTFM) framework
 
 # [Documentation](https://docs.rs/rtfm-core)
 

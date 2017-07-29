@@ -5,8 +5,8 @@
 //! implementation of the RTFM framework for a particular architecture.
 //! Currently there are implementations for these two architectures:
 //!
-//! - [ARM Cortex-M](https://crates.io/crates/cortex-m-rtfm)
-//! - [MSP430](https://crates.io/crates/msp430-rtfm)
+//! - [ARM Cortex-M](https://github.com/japaric/cortex-m-rtfm)
+//! - [MSP430](https://github.com/japaric/msp430-rtfm)
 #![deny(missing_docs)]
 #![deny(warnings)]
 #![feature(optin_builtin_traits)]
