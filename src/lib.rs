@@ -9,12 +9,12 @@
 //! - [MSP430](https://crates.io/crates/msp430-rtfm)
 #![deny(missing_docs)]
 #![deny(warnings)]
-#![feature(optin_builtin_traits)]
 #![no_std]
 
 extern crate static_ref;
 
 use core::u8;
+use core::marker::PhantomData;
 
 pub use static_ref::Static;
 
@@ -90,6 +90,7 @@ where
 /// current context
 pub struct Threshold {
     value: u8,
+    _not_send: PhantomData<*const ()>,
 }
 
 impl Threshold {
@@ -98,7 +99,7 @@ impl Threshold {
     /// This API is meant to be used to create abstractions and not to be
     /// directly used by applications.
     pub unsafe fn new(value: u8) -> Self {
-        Threshold { value }
+        Threshold { value, _not_send: PhantomData }
     }
 
     /// Creates a `Threshold` token with maximum value
@@ -115,4 +116,4 @@ impl Threshold {
     }
 }
 
-impl !Send for Threshold {}
+unsafe impl Sync for Threshold {}
