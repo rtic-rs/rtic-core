@@ -9,7 +9,7 @@
 //! - [MSP430](https://crates.io/crates/msp430-rtfm)
 #![deny(missing_docs)]
 #![deny(warnings)]
-#![feature(optin_builtin_traits)]
+#![feature(optin_builtin_traits, untagged_unions)]
 #![no_std]
 
 extern crate static_ref;
@@ -80,6 +80,15 @@ where
     {
         f(self, t)
     }
+}
+
+/// A resource initialized by `init`.
+#[allow(unions_with_drop_fields)]
+pub union LateResource<T> {
+    /// Uninitialized state before and during `init`.
+    pub uninit: (),
+    /// Initialized state after `init` was run.
+    pub init: T,
 }
 
 /// Preemption threshold token
