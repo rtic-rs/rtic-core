@@ -116,4 +116,3 @@ impl Threshold {
     }
 }
 
-unsafe impl Sync for Threshold {}
