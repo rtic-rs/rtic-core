@@ -82,6 +82,15 @@ where
     }
 }
 
+/// A resource initialized by `init`.
+#[allow(unions_with_drop_fields)]
+pub union LateResource<T: Copy> {
+    /// Uninitialized state before and during `init`.
+    pub uninit: (),
+    /// Initialized state after `init` was run.
+    pub init: T,
+}
+
 /// Preemption threshold token
 ///
 /// The preemption threshold indicates the priority a task must have to preempt
