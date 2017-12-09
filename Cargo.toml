@@ -8,6 +8,3 @@ license = "MIT OR Apache-2.0"
 name = "rtfm-core"
 repository = "https://github.com/japaric/rtfm-core"
 version = "0.1.0"
-
-[dependencies]
-static-ref = "0.2.1"
