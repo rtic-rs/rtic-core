@@ -11,12 +11,8 @@
 #![deny(warnings)]
 #![no_std]
 
-extern crate static_ref;
-
 use core::u8;
 use core::marker::PhantomData;
-
-pub use static_ref::Static;
 
 /// A resource, a mechanism to share data between tasks
 pub unsafe trait Resource {
@@ -29,57 +25,22 @@ pub unsafe trait Resource {
     ///
     /// This will `panic!` if the threshold is not high enough to protect the
     /// resource data from data races
-    fn borrow<'cs>(&'cs self, t: &'cs Threshold) -> &'cs Static<Self::Data>;
+    fn borrow<'cs>(&'cs self, t: &'cs Threshold) -> &'cs Self::Data;
 
     /// Mutable variant of `borrow`
-    fn borrow_mut<'cs>(
-        &'cs mut self,
-        t: &'cs Threshold,
-    ) -> &'cs mut Static<Self::Data>;
+    fn borrow_mut<'cs>(&'cs mut self, t: &'cs Threshold) -> &'cs mut Self::Data;
 
     /// Claims the resource data for the span of the closure `f`. For the
     /// duration of the closure other tasks that may access the resource data
     /// are prevented from preempting the current task.
     fn claim<R, F>(&self, t: &mut Threshold, f: F) -> R
     where
-        F: FnOnce(&Static<Self::Data>, &mut Threshold) -> R;
+        F: FnOnce(&Self::Data, &mut Threshold) -> R;
 
     /// Mutable variant of `claim`
     fn claim_mut<R, F>(&mut self, t: &mut Threshold, f: F) -> R
     where
-        F: FnOnce(&mut Static<Self::Data>, &mut Threshold) -> R;
-}
-
-unsafe impl<T> Resource for Static<T>
-where
-    T: Send,
-{
-    type Data = T;
-
-    fn borrow<'cs>(&'cs self, _cs: &'cs Threshold) -> &'cs Static<T> {
-        self
-    }
-
-    fn borrow_mut<'cs>(
-        &'cs mut self,
-        _cs: &'cs Threshold,
-    ) -> &'cs mut Static<T> {
-        self
-    }
-
-    fn claim<R, F>(&self, t: &mut Threshold, f: F) -> R
-    where
-        F: FnOnce(&Static<Self::Data>, &mut Threshold) -> R,
-    {
-        f(self, t)
-    }
-
-    fn claim_mut<R, F>(&mut self, t: &mut Threshold, f: F) -> R
-    where
-        F: FnOnce(&mut Static<Self::Data>, &mut Threshold) -> R,
-    {
-        f(self, t)
-    }
+        F: FnOnce(&mut Self::Data, &mut Threshold) -> R;
 }
 
 /// Preemption threshold token
@@ -99,7 +60,10 @@ impl Threshold {
     /// This API is meant to be used to create abstractions and not to be
     /// directly used by applications.
     pub unsafe fn new(value: u8) -> Self {
-        Threshold { value, _not_send: PhantomData }
+        Threshold {
+            value,
+            _not_send: PhantomData,
+        }
     }
 
     /// Creates a `Threshold` token with maximum value
@@ -115,4 +79,3 @@ impl Threshold {
         self.value
     }
 }
-
