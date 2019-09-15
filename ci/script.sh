@@ -1,11 +1,7 @@
 set -euxo pipefail
 
 main() {
-    if [ $TRAVIS_RUST_VERSION = nightly ]; then
-        cargo check
-    else
-        cargo check
-    fi
+    cargo check
 }
 
 # fake Travis variables to be able to run this on a local machine
