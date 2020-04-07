@@ -15,56 +15,52 @@
 #![deny(warnings)]
 #![no_std]
 
-use core::ops;
+use core::ops::Sub;
+pub use mutex_trait::{prelude::*, Exclusive, Mutex};
 
-/// Memory safe access to shared resources
-///
-/// In RTFM, locks are implemented as critical sections that prevent other tasks from *starting*.
-/// These critical sections are implemented by temporarily increasing the dynamic priority of the
-/// current context. Entering and leaving these critical sections is always done in bounded constant
-/// time (a few instructions in bare metal contexts).
-pub trait Mutex {
-    /// Data protected by the mutex
-    type T;
+/// A fraction
+pub struct Fraction {
+    /// The numerator
+    pub numerator: u32,
 
-    /// Creates a critical section and grants temporary access to the protected data
-    fn lock<R>(&mut self, f: impl FnOnce(&mut Self::T) -> R) -> R;
+    /// The denominator
+    pub denominator: u32,
 }
 
-impl<'a, M> Mutex for &'a mut M
-where
-    M: Mutex,
-{
-    type T = M::T;
+/// A monotonic clock / counter
+pub trait Monotonic {
+    /// A measurement of this clock, use `CYCCNT` as a reference implementation for `Instant`.
+    /// Note that the Instant must be a signed value such as `i32`.
+    type Instant: Copy + Ord + Sub;
 
-    fn lock<R>(&mut self, f: impl FnOnce(&mut M::T) -> R) -> R {
-        M::lock(self, f)
-    }
+    /// The ratio between the system timer (SysTick) frequency and this clock frequency, i.e.
+    /// `Monotonic clock * Fraction = System clock`
+    ///
+    /// The ratio must be expressed in *reduced* `Fraction` form to prevent overflows. That is
+    /// `2 / 3` instead of `4 / 6`
+    fn ratio() -> Fraction;
+
+    /// Returns the current time
+    ///
+    /// # Correctness
+    ///
+    /// This function is *allowed* to return nonsensical values if called before `reset` is invoked
+    /// by the runtime. Therefore application authors should *not* call this function during the
+    /// `#[init]` phase.
+    fn now() -> Self::Instant;
+
+    /// Resets the counter to *zero*
+    ///
+    /// # Safety
+    ///
+    /// This function will be called *exactly once* by the RTFM runtime after `#[init]` returns and
+    /// before tasks can start; this is also the case in multi-core applications. User code must
+    /// *never* call this function.
+    unsafe fn reset();
+
+    /// A `Self::Instant` that represents a count of *zero*
+    fn zero() -> Self::Instant;
 }
 
-/// Newtype over `&'a mut T` that implements the `Mutex` trait
-///
-/// The `Mutex` implementation for this type is a no-op: no critical section is created
-pub struct Exclusive<'a, T>(pub &'a mut T);
-
-impl<'a, T> Mutex for Exclusive<'a, T> {
-    type T = T;
-
-    fn lock<R>(&mut self, f: impl FnOnce(&mut T) -> R) -> R {
-        f(self.0)
-    }
-}
-
-impl<'a, T> ops::Deref for Exclusive<'a, T> {
-    type Target = T;
-
-    fn deref(&self) -> &T {
-        self.0
-    }
-}
-
-impl<'a, T> ops::DerefMut for Exclusive<'a, T> {
-    fn deref_mut(&mut self) -> &mut T {
-        self.0
-    }
-}
+/// A marker trait that indicates that it is correct to use this type in multi-core context
+pub trait MultiCore {}
