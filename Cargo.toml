@@ -14,4 +14,4 @@ version = "0.4.0"
 edition = "2018"
 
 [dependencies]
-mutex-trait = "0.1.0"
+mutex-trait = "0.2.0"
