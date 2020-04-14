@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+-  Common parts from `cortex-m-rfm` has been moved here
+
+### Changed
+
+- [breaking-change] The `Mutex` trait has been removed in favor of `mutex-trait` crate
+
 ## [v0.3.0] - 2019-11-14
 
 ### Added
