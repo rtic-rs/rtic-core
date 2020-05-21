@@ -15,8 +15,8 @@
 #![deny(warnings)]
 #![no_std]
 
-use core::ops::Sub;
 pub use mutex_trait::{prelude::*, Exclusive, Mutex};
+pub use embedded_time;
 
 /// A fraction
 pub struct Fraction {
@@ -28,26 +28,10 @@ pub struct Fraction {
 }
 
 /// A monotonic clock / counter
-pub trait Monotonic {
-    /// A measurement of this clock, use `CYCCNT` as a reference implementation for `Instant`.
-    /// Note that the Instant must be a signed value such as `i32`.
-    type Instant: Copy + Ord + Sub;
-
-    /// The ratio between the system timer (SysTick) frequency and this clock frequency, i.e.
-    /// `Monotonic clock * Fraction = System clock`
-    ///
-    /// The ratio must be expressed in *reduced* `Fraction` form to prevent overflows. That is
-    /// `2 / 3` instead of `4 / 6`
-    fn ratio() -> Fraction;
-
-    /// Returns the current time
-    ///
-    /// # Correctness
-    ///
-    /// This function is *allowed* to return nonsensical values if called before `reset` is invoked
-    /// by the runtime. Therefore application authors should *not* call this function during the
-    /// `#[init]` phase.
-    fn now() -> Self::Instant;
+pub trait Monotonic: embedded_time::Clock {
+    // /// A measurement of this clock, use `CYCCNT` as a reference implementation for `Instant`.
+    // /// Note that the Instant must be a signed value such as `i32`.
+    // type Instant;
 
     /// Resets the counter to *zero*
     ///
@@ -58,8 +42,8 @@ pub trait Monotonic {
     /// *never* call this function.
     unsafe fn reset();
 
-    /// A `Self::Instant` that represents a count of *zero*
-    fn zero() -> Self::Instant;
+    // /// A `Self::Instant` that represents a count of *zero*
+    // fn zero() -> Self::Instant;
 }
 
 /// A marker trait that indicates that it is correct to use this type in multi-core context
