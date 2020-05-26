@@ -1,10 +1,10 @@
-//! Core abstractions of the Real Time For the Masses (RTFM) framework
+//! Core abstractions of the Real Time For the Masses (RTIC) framework
 //!
 //! You can write generic *libraries* using the `Mutex` trait in this crate. If you want to write
-//! application code then you'll need an *implementation* of the RTFM framework for a particular
+//! application code then you'll need an *implementation* of the RTIC framework for a particular
 //! architecture. Currently, there are implementations for these architectures and OSes:
 //!
-//! - [ARM Cortex-M](https://crates.io/crates/cortex-m-rtfm)
+//! - [ARM Cortex-M](https://crates.io/crates/cortex-m-rtic)
 // - [Linux]
 // - [MSP430]
 // - [RISC-V]
@@ -19,7 +19,7 @@ use core::ops;
 
 /// Memory safe access to shared resources
 ///
-/// In RTFM, locks are implemented as critical sections that prevent other tasks from *starting*.
+/// In RTIC, locks are implemented as critical sections that prevent other tasks from *starting*.
 /// These critical sections are implemented by temporarily increasing the dynamic priority of the
 /// current context. Entering and leaving these critical sections is always done in bounded constant
 /// time (a few instructions in bare metal contexts).

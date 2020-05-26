@@ -1,11 +1,11 @@
-[![crates.io](https://img.shields.io/crates/v/rtfm-core.svg)](https://crates.io/crates/rtfm-core)
-[![crates.io](https://img.shields.io/crates/d/rtfm-core.svg)](https://crates.io/crates/rtfm-core)
+[![crates.io](https://img.shields.io/crates/v/rtic-core.svg)](https://crates.io/crates/rtic-core)
+[![crates.io](https://img.shields.io/crates/d/rtic-core.svg)](https://crates.io/crates/rtic-core)
 
-# `rtfm-core`
+# `rtic-core`
 
 > Core abstractions of the Real Time For the Masses
 
-# [Documentation](https://docs.rs/rtfm-core)
+# [Documentation](https://docs.rs/rtic-core)
 
 # License
 
