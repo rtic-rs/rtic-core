@@ -1,4 +1,4 @@
-//! Core abstractions of the Real Time For the Masses (RTIC) framework
+//! Core abstractions of the Real-Time Interrupt-driven Concurrency (RTIC) framework
 //!
 //! You can write generic *libraries* using the `Mutex` trait in this crate. If you want to write
 //! application code then you'll need an *implementation* of the RTIC framework for a particular

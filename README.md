@@ -3,7 +3,7 @@
 
 # `rtic-core`
 
-> Core abstractions of the Real Time For the Masses
+> Core abstractions of the Real-Time Interrupt-driven Concurrency
 
 # [Documentation](https://docs.rs/rtic-core)
 
