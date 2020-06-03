@@ -16,23 +16,10 @@
 #![no_std]
 
 pub use mutex_trait::{prelude::*, Exclusive, Mutex};
-pub use embedded_time;
-
-/// A fraction
-pub struct Fraction {
-    /// The numerator
-    pub numerator: u32,
-
-    /// The denominator
-    pub denominator: u32,
-}
+pub use embedded_time as time;
 
 /// A monotonic clock / counter
-pub trait Monotonic: embedded_time::Clock {
-    // /// A measurement of this clock, use `CYCCNT` as a reference implementation for `Instant`.
-    // /// Note that the Instant must be a signed value such as `i32`.
-    // type Instant;
-
+pub trait Monotonic: time::Clock {
     /// Resets the counter to *zero*
     ///
     /// # Safety
@@ -41,9 +28,6 @@ pub trait Monotonic: embedded_time::Clock {
     /// before tasks can start; this is also the case in multi-core applications. User code must
     /// *never* call this function.
     unsafe fn reset();
-
-    // /// A `Self::Instant` that represents a count of *zero*
-    // fn zero() -> Self::Instant;
 }
 
 /// A marker trait that indicates that it is correct to use this type in multi-core context
