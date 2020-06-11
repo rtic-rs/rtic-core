@@ -1,13 +1,13 @@
 [package]
 authors = [
-  "The Real Time For the Masses developers",
+  "The Real-Time Interrupt-driven Concurrency developers",
   "Jorge Aparicio <jorge@japaric.io>",
 ]
 categories = ["concurrency", "embedded", "no-std"]
-description = "Core abstractions of the Real Time For the Masses framework"
-documentation = "https://docs.rs/rtfm-core"
+description = "Core abstractions of the Real-Time Interrupt-driven Concurrency framework"
+documentation = "https://docs.rs/rtic-core"
 keywords = []
 license = "MIT OR Apache-2.0"
-name = "rtfm-core"
-repository = "https://github.com/rtfm-rs/rtfm-core"
+name = "rtic-core"
+repository = "https://github.com/rtic-rs/rtic-core"
 version = "0.3.0"
