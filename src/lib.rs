@@ -15,8 +15,6 @@
 #![deny(warnings)]
 #![no_std]
 
-use core::ops;
-
 /// Memory safe access to shared resources
 ///
 /// In RTIC, locks are implemented as critical sections that prevent other tasks from *starting*.
@@ -28,7 +26,7 @@ pub trait Mutex {
     type T;
 
     /// Creates a critical section and grants temporary access to the protected data
-    fn lock<R>(&mut self, f: impl FnOnce(&mut Self::T) -> R) -> R;
+    fn lock<R>(&self, f: impl FnOnce(&mut Self::T) -> R) -> R;
 }
 
 impl<'a, M> Mutex for &'a mut M
@@ -37,34 +35,7 @@ where
 {
     type T = M::T;
 
-    fn lock<R>(&mut self, f: impl FnOnce(&mut M::T) -> R) -> R {
+    fn lock<R>(&self, f: impl FnOnce(&mut M::T) -> R) -> R {
         M::lock(self, f)
-    }
-}
-
-/// Newtype over `&'a mut T` that implements the `Mutex` trait
-///
-/// The `Mutex` implementation for this type is a no-op: no critical section is created
-pub struct Exclusive<'a, T>(pub &'a mut T);
-
-impl<'a, T> Mutex for Exclusive<'a, T> {
-    type T = T;
-
-    fn lock<R>(&mut self, f: impl FnOnce(&mut T) -> R) -> R {
-        f(self.0)
-    }
-}
-
-impl<'a, T> ops::Deref for Exclusive<'a, T> {
-    type Target = T;
-
-    fn deref(&self) -> &T {
-        self.0
-    }
-}
-
-impl<'a, T> ops::DerefMut for Exclusive<'a, T> {
-    fn deref_mut(&mut self) -> &mut T {
-        self.0
     }
 }
