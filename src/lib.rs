@@ -68,7 +68,12 @@ impl<'a, T> Mutex for Exclusive<'a, T> {
 
     fn lock<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {
         if self.locked.get() {
-            panic!("Attempt to re-lock");
+            #[cfg(feature = "link_fail")]
+            unsafe {
+                re_lock()
+            };
+            #[cfg(not(feature = "link_fail"))]
+            panic!("Re-lock of Exclusive resource");
         }
         self.locked.set(true);
         let r = f(unsafe { &mut *(self.val as *const _ as *mut T) });
@@ -89,4 +94,9 @@ impl<'a, T> DerefMut for Exclusive<'a, T> {
     fn deref_mut(&mut self) -> &mut T {
         self.val
     }
+}
+
+#[cfg(feature = "link_fail")]
+extern "C" {
+    pub fn re_lock() -> ();
 }

@@ -11,3 +11,6 @@ license = "MIT OR Apache-2.0"
 name = "rtic-core"
 repository = "https://github.com/rtic-rs/rtic-core"
 version = "0.3.0"
+
+[features]
+link_fail = []
