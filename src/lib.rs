@@ -13,6 +13,7 @@
 #![deny(rust_2018_compatibility)]
 #![deny(rust_2018_idioms)]
 #![deny(warnings)]
+#![allow(mutable_transmutes)]
 #![no_std]
 
 /// Memory safe access to shared resources
@@ -29,7 +30,8 @@ pub trait Mutex {
     fn lock<R>(&self, f: impl FnOnce(&mut Self::T) -> R) -> R;
 }
 
-impl<'a, M> Mutex for &'a mut M
+// TODO: &'a M or &'a mut M?
+impl<'a, M> Mutex for &'a M
 where
     M: Mutex,
 {
@@ -37,5 +39,35 @@ where
 
     fn lock<R>(&self, f: impl FnOnce(&mut M::T) -> R) -> R {
         M::lock(self, f)
+    }
+}
+
+use core::{mem, ops::Deref, ops::DerefMut};
+
+/// Newtype over `&'a mut T` that implements the `Mutex` trait
+///
+/// The `Mutex` implementation for this type is a no-op: no critical section is created
+pub struct Exclusive<'a, T>(pub &'a mut T);
+
+impl<'a, T> Mutex for Exclusive<'a, T> {
+    type T = T;
+
+    fn lock<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {
+        // TODO: can we do this less unsafe?
+        f(unsafe { mem::transmute::<&T, &mut T>(self.deref()) })
+    }
+}
+
+impl<'a, T> Deref for Exclusive<'a, T> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        self.0
+    }
+}
+
+impl<'a, T> DerefMut for Exclusive<'a, T> {
+    fn deref_mut(&mut self) -> &mut T {
+        self.0
     }
 }
