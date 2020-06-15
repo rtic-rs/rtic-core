@@ -42,18 +42,38 @@ where
     }
 }
 
+use core::cell::Cell;
 use core::{ops::Deref, ops::DerefMut};
 
 /// Newtype over `&'a mut T` that implements the `Mutex` trait
 ///
 /// The `Mutex` implementation for this type is a no-op: no critical section is created
-pub struct Exclusive<'a, T>(pub &'a mut T);
+pub struct Exclusive<'a, T> {
+    val: &'a mut T,
+    locked: Cell<bool>,
+}
+
+impl<'a, T> Exclusive<'a, T> {
+    /// Create an Exclusive
+    pub fn new(val: &'a mut T) -> Self {
+        Self {
+            val,
+            locked: Cell::new(false),
+        }
+    }
+}
 
 impl<'a, T> Mutex for Exclusive<'a, T> {
     type T = T;
 
-    fn lock<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {        
-        f(unsafe { &mut *(self.0 as *const _ as *mut T) })
+    fn lock<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {
+        if self.locked.get() {
+            panic!("Attempt to re-lock");
+        }
+        self.locked.set(true);
+        let r = f(unsafe { &mut *(self.val as *const _ as *mut T) });
+        self.locked.set(false);
+        r
     }
 }
 
@@ -61,12 +81,12 @@ impl<'a, T> Deref for Exclusive<'a, T> {
     type Target = T;
 
     fn deref(&self) -> &T {
-        self.0
+        self.val
     }
 }
 
 impl<'a, T> DerefMut for Exclusive<'a, T> {
     fn deref_mut(&mut self) -> &mut T {
-        self.0
+        self.val
     }
 }
