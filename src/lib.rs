@@ -42,7 +42,7 @@ where
     }
 }
 
-use core::{mem, ops::Deref, ops::DerefMut};
+use core::{ops::Deref, ops::DerefMut};
 
 /// Newtype over `&'a mut T` that implements the `Mutex` trait
 ///
@@ -52,9 +52,8 @@ pub struct Exclusive<'a, T>(pub &'a mut T);
 impl<'a, T> Mutex for Exclusive<'a, T> {
     type T = T;
 
-    fn lock<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {
-        // TODO: can we do this less unsafe?
-        f(unsafe { mem::transmute::<&T, &mut T>(self.deref()) })
+    fn lock<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {        
+        f(unsafe { &mut *(self.0 as *const _ as *mut T) })
     }
 }
 
