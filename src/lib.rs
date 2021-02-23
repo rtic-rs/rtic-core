@@ -75,7 +75,7 @@ impl<'a, T> ops::DerefMut for Exclusive<'a, T> {
 /// # Example
 ///
 /// ```
-/// use mutex_trait::prelude::*;
+/// use rtic_core::prelude::*;
 ///
 /// fn normal_lock(
 ///     a: &mut impl Mutex<T = i32>,
@@ -98,7 +98,7 @@ impl<'a, T> ops::DerefMut for Exclusive<'a, T> {
 /// Has a shorthand as:
 ///
 /// ```
-/// use mutex_trait::prelude::*;
+/// use rtic_core::prelude::*;
 ///
 /// fn tuple_lock(
 ///     a: &mut impl Mutex<T = i32>,
