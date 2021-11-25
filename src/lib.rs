@@ -14,6 +14,10 @@
 #![deny(rust_2018_idioms)]
 #![deny(warnings)]
 #![no_std]
+#![doc(
+    html_logo_url = "https://raw.githubusercontent.com/rtic-rs/cortex-m-rtic/master/book/en/src/RTIC.svg",
+    html_favicon_url = "https://raw.githubusercontent.com/rtic-rs/cortex-m-rtic/master/book/en/src/RTIC.svg"
+)]
 
 use core::ops;
 
