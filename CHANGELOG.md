@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0.0] - 2021-12-25
+
+### Changed
+
+- Edition 2021
+
 ## [v0.3.1] - 2020-11-14
 
 ### Added
@@ -40,7 +46,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 Initial release
 
-[Unreleased]: https://github.com/rtic-rs/rtic-core/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/rtic-rs/rtic-core/compare/v1.0.0...HEAD
+[v1.0.0]: https://github.com/rtic-rs/rtic-core/compare/v0.3.1...v1.0.0
 [v0.3.1]: https://github.com/rtic-rs/rtic-core/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/rtic-rs/rtic-core/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/rtic-rs/rtic-core/compare/v0.1.0...v0.2.0
