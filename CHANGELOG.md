@@ -9,7 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Add Clippy to CI
 - CI changelog entry enforcer
+
+### Changed
+
+- Use rust-cache for CI
+
+### Fixed
 
 ## [v1.0.0] - 2021-12-25
 
