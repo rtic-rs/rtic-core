@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+For each category, *Added*, *Changed*, *Fixed* add new entries at the top!
+
 ## [Unreleased]
 
 ### Added
@@ -12,11 +14,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add Clippy to CI
 - CI changelog entry enforcer
 
+### Fixed
+
 ### Changed
 
+- Use native GHA rustup and cargo
 - Use rust-cache for CI
-
-### Fixed
 
 ## [v1.0.0] - 2021-12-25
 
