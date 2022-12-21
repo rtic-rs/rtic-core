@@ -16,48 +16,31 @@ jobs:
   # Run cargo fmt --check
   style:
     name: style
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          components: rustfmt
+      - name: Cache Dependencies
+        uses: Swatinem/rust-cache@v2
 
       - name: Fail on warnings
         run: sed -i 's,//deny_warnings_placeholder_for_ci,#![deny(warnings)],' src/lib.rs
 
       - name: cargo fmt --check
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+        run:  cargo fmt --all -- --check
 
   # Compilation check
   check:
     name: check
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        target:
-          - x86_64-unknown-linux-gnu
-        toolchain:
-          - stable
+    runs-on: ubuntu-22.04
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install Rust ${{ matrix.toolchain }} with target (${{ matrix.target }})
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: ${{ matrix.toolchain }}
-          target: ${{ matrix.target }}
-          override: true
+      - name: Cache Dependencies
+        uses: Swatinem/rust-cache@v2
 
       - name: Fail on warnings
         run: sed -i 's,//deny_warnings_placeholder_for_ci,#![deny(warnings)],' src/lib.rs
@@ -66,38 +49,24 @@ jobs:
         uses: Swatinem/rust-cache@v1
 
       - name: cargo check
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: false
-          command: check
-          args: --target=${{ matrix.target }}
+        run: cargo check
 
   # Clippy
   clippy:
     name: Cargo clippy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Install Rust stable
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: x86_64-unknown-linux-gnu
-          override: true
 
       - name: Fail on warnings
         run: sed -i 's,//deny_warnings_placeholder_for_ci,#![deny(warnings)],' src/lib.rs
 
       - name: Cache Dependencies
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: cargo clippy
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: false
-          command: clippy
+        run: cargo clippy
 
   # Refs: https://github.com/rust-lang/crater/blob/9ab6f9697c901c4a44025cf0a39b73ad5b37d198/.github/workflows/bors.yml#L125-L149
   #
@@ -110,7 +79,7 @@ jobs:
       - style
       - check
       - clippy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Mark the job as a success
         run: exit 0
