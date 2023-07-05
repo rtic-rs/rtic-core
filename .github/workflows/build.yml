@@ -1,5 +1,6 @@
 name: Build
 on:
+  merge_group:
   pull_request:
   push:
     branches:
@@ -68,8 +69,6 @@ jobs:
       - name: cargo clippy
         run: cargo clippy
 
-  # Refs: https://github.com/rust-lang/crater/blob/9ab6f9697c901c4a44025cf0a39b73ad5b37d198/.github/workflows/bors.yml#L125-L149
-  #
   # ALL THE PREVIOUS JOBS NEEDS TO BE ADDED TO THE `needs` SECTION OF THIS JOB!
 
   ci-success:
